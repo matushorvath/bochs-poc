@@ -1,5 +1,5 @@
-#display_library: term
-display_library: sdl2
+display_library: term
+#display_library: sdl2
 
 romimage: file=$BXSHARE/BIOS-bochs-legacy
 optromimage1: file=bin/image-optrom.bin, address=0xd0000
@@ -10,3 +10,5 @@ vga: extension=none
 sound: driver=dummy
 
 magic_break: enabled=1
+
+com1: enabled=1, mode=file, dev=serial.log

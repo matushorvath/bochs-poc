@@ -21,11 +21,23 @@ section rom start=(rom_seg * 0x10)                          ; ROM
 boot:                                                       ; entry point
     xchg bx, bx
 
+    ; vga text mode
     mov ax, video_seg
     mov es, ax
 
     mov byte [es:0], 'H'
     mov byte [es:1], 0x07
+
+    ; serial port
+    mov dx, 0                                               ; COM1
+
+    mov ah, 0x00                                            ; init serial port
+    mov al, 0b_111_00_0_11                                  ; 9600 P0 S1 8 bits
+    int 0x14
+
+    mov ah, 0x01                                            ; send character
+    mov al, 'H'
+    int 0x14
 
     jmp $
 
