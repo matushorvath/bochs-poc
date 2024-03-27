@@ -1,0 +1,17 @@
+display_library: term
+#display_library: wx
+#config_interface: wx
+#display_library: sdl2
+#display_library: nogui
+
+romimage: file=/usr/share/seabios/bios.bin
+vgaromimage: file=/usr/share/seabios/vgabios-isavga.bin
+
+optromimage1: file=bin/image-optrom.bin, address=0xd0000
+
+#log: bochs.log
+
+vga: extension=none
+sound: driver=dummy
+
+magic_break: enabled=1

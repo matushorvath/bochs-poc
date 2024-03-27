@@ -20,6 +20,8 @@ init:
     ; mov byte [es:video_off + 0], 'H'
     ; mov byte [es:video_off + 1], 0x07
 
+    xchg bx, bx
+
     jmp $
 
     ; position the boot entry point at 0xffff0
