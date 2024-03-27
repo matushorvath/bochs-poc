@@ -16,7 +16,7 @@ video_off:
 section rom start=(rom_seg * 0x10)                          ; ROM
 
     ; signature
-    dw  0x55aa
+    dw  0xaa55
     ; size in 512 byte blocks
     db  rom_size / 0x200
 
@@ -31,5 +31,8 @@ boot:                                                       ; entry point
 
     jmp $
 
-    ; fill in the rest of image up to rom_size
-    db  rom_size-($-$$) dup 0
+    ; fill in the rest of image up to rom_size - 1
+    db  rom_size-($-$$)-1 dup 0
+
+    ; checksum
+    db  0
