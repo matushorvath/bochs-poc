@@ -2,7 +2,7 @@ BINDIR ?= bin
 OBJDIR ?= obj
 
 .PHONY: build
-build: build-prep $(BINDIR)/image-bios.bin $(BINDIR)/image-optrom.bin
+build: build-prep $(BINDIR)/image.bin
 
 .PHONY: build-prep
 build-prep:

@@ -1,10 +1,10 @@
-# make && echo continue | bochs -q -f bochsrc.optrom
+# rm serial.log ; make && echo continue | bochs -q
 
 #display_library: term
 display_library: sdl2
 
 romimage: file=$BXSHARE/BIOS-bochs-legacy
-optromimage1: file=bin/image-optrom.bin, address=0xd0000
+optromimage1: file=bin/image.bin, address=0xd0000
 
 #log: bochs.log
 
