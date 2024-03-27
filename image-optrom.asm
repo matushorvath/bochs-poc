@@ -39,9 +39,29 @@ boot:                                                       ; entry point
     mov al, 'H'
     int 0x14
 
+    sti
+    hlt
+
     ; bochs console
     mov al, 'H'
     out 0xe9, al
+
+    ; apm connect
+    mov ax, 0x5301
+    xor bx, bx
+    int 0x15
+
+    ; apm set version to 1.2
+    mov ax, 0x530e
+    xor bx, bx
+    mov cx, 0x0102
+    int 0x15
+
+    ; apm power off
+    mov ax, 0x5307
+    mov bx, 0x0001
+    mov cx, 0x0003
+    int 0x15
 
     ; reset using keyboard controller
 ;    mov al, 0xfe                                            ; shutdown command

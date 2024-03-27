@@ -1,14 +1,14 @@
 # make && echo continue | bochs -q -f bochsrc.optrom
 
-display_library: term
-#display_library: sdl2
+#display_library: term
+display_library: sdl2
 
 romimage: file=$BXSHARE/BIOS-bochs-legacy
 optromimage1: file=bin/image-optrom.bin, address=0xd0000
 
 #log: bochs.log
 
-sound: driver=dummy
+#sound: driver=dummy
 
 #magic_break: enabled=1
 
