@@ -1,13 +1,7 @@
-display_library: term
-#display_library: wx
-#config_interface: wx
-#display_library: sdl2
-#display_library: nogui
+#display_library: term
+display_library: sdl2
 
 romimage: file=$BXSHARE/BIOS-bochs-legacy
-#romimage: file=/usr/share/seabios/bios.bin
-#vgaromimage: file=/usr/share/seabios/vgabios-isavga.bin
-
 optromimage1: file=bin/image-optrom.bin, address=0xd0000
 
 #log: bochs.log

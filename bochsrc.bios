@@ -1,8 +1,5 @@
-display_library: term
-#display_library: wx
-#config_interface: wx
-#display_library: sdl2
-#display_library: nogui
+#display_library: term
+display_library: sdl2
 
 romimage: file=bin/image-bios.bin, address=0xffff0000
 
