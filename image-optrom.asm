@@ -39,8 +39,12 @@ boot:                                                       ; entry point
     mov al, 'H'
     int 0x14
 
-    sti
-    hlt
+wait_serial:
+    mov ax, 0x03                                            ; get status
+    int 0x14
+
+    and ah, 0b_01000000                                     ; trans shift reg empty
+    jz wait_serial
 
     ; bochs console
     mov al, 'H'
