@@ -39,6 +39,14 @@ boot:                                                       ; entry point
     mov al, 'H'
     int 0x14
 
+    ; bochs console
+    mov al, 'H'
+    out 0xe9, al
+
+    ; reset using keyboard controller
+;    mov al, 0xfe                                            ; shutdown command
+;    out 0x64, al                                            ; write to 8042 status port
+
     jmp $
 
     ; fill in the rest of image up to rom_size - 1
