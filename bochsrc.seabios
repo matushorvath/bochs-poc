@@ -1,0 +1,23 @@
+# https://defuse.ca/bochs-images.htm
+# https://defuse.ca/files/CorePlus.img.xz
+# https://defuse.ca/files/DebianWheezy.img.xz
+
+# System configuration.
+romimage: file=/usr/share/seabios/bios.bin
+vgaromimage: file=/usr/share/seabios/vgabios-cirrus.bin
+vga: extension=cirrus
+pci: enabled=1, chipset=i440fx, slot1=cirrus
+
+#cpu: model=corei7_ivy_bridge_3770k, ips=120000000
+#clock: sync=slowdown
+megs: 1024
+boot: disk
+
+# Hard disks.
+ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
+#ata0-master: type=disk, path="CorePlus.img", cylinders=406, heads=8, spt=63
+ata0-master: type=disk, path="DebianWheezy.img", cylinders=4161, heads=8, spt=63
+
+# MH
+display_library: sdl2
+sound: driver=dummy

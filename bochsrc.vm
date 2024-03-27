@@ -1,0 +1,15 @@
+display_library: term
+#display_library: wx
+#config_interface: wx
+#display_library: sdl2
+#display_library: nogui
+
+romimage: file=bin/image.bin, address=0xffff0000
+
+#log: bochs.log
+
+info: action=report
+error: action=ask
+panic: action=ask
+
+sound: driver=dummy
