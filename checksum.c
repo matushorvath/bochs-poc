@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     printf("File name: %s\n", argv[1]);
 
     FILE *f = fopen(argv[1], "rb+");
-    if (ferror(f)) {
+    if (!f) {
         fprintf(stderr, "Error while opening file\n");
         return 1;
     }

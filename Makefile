@@ -14,35 +14,41 @@ else
 endif
 
 .PHONY: build
-build: prep $(BINDIR)/image.vm8086.bin $(BINDIR)/image.bochs.bin
+build: prep $(OBJDIR)/image.vm8086.bin $(OBJDIR)/image.bochs.bin
 
-$(BINDIR)/%.bochs.bin: %.asm $(wildcard *.inc) $(OBJDIR)/checksum
+$(OBJDIR)/%.bochs.bin: %.asm $(wildcard *.inc) $(OBJDIR)/checksum
 	nasm -d BOCHS -f bin $< -o $@
 	$(OBJDIR)/checksum $@ || rm $@
 	hexdump -C $@ ; true
 
-$(BINDIR)/%.vm8086.bin: %.asm $(wildcard *.inc)
+$(OBJDIR)/%.vm8086.bin: %.asm $(wildcard *.inc)
 	nasm -d VM8086 -f bin $< -o $@
 	hexdump -C $@ ; true
 
-$(OBJDIR)/checksum: $(OBJDIR)/checksum.o
-	$(CC) $^ -o $@
+$(OBJDIR)/%: $(OBJDIR)/%.o
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(OBJDIR)/checksum.o: checksum.c
-	$(CC) -c $^ -o $@
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $^ -o $@
 
 .PHONY: run
-run: prep $(BINDIR)/image.bochs.out
+run: prep $(BINDIR)/image.bochs.txt
 
-$(BINDIR)/%.bochs.out: $(BINDIR)/%.bochs.bin
+$(BINDIR)/%.txt: $(OBJDIR)/%.serial $(OBJDIR)/dump_state
+	$(OBJDIR)/dump_state $< $@
+
+$(OBJDIR)/%.serial: $(OBJDIR)/%.bin
 	echo continue | bochs -q -f bochsrc.${PLATFORM} \
 		"optromimage1:file=$<,address=0xd0000" "com1:dev=$@" || true
 
 .PHONY: prep
 prep:
-	rm $(BINDIR)/*.out
+	rm -f $(BINDIR)/*.out
 	mkdir -p $(BINDIR) $(OBJDIR)
 
 .PHONY: clean
 clean:
 	rm -rf $(BINDIR) $(OBJDIR)
+
+# Keep all automatically generated files (e.g. object files)
+.SECONDARY:

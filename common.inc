@@ -67,7 +67,7 @@ initialize:
     pop ax
 %endif
 
-    ret
+    retn
 
 
 out_char:                                                   ; al is the char to print
@@ -97,7 +97,7 @@ out_char:                                                   ; al is the char to 
     ; TODO
 %endif
 
-    ret
+    retn
 
 
 power_off:
@@ -121,8 +121,133 @@ power_off:
 %endif
 
 %ifdef VM8086
-    ; TODO
+    ; TODO don't use hlt to stop the vm
+    hlt
 %endif
 
     ; we should not ever get here
     jmp $
+
+
+dump_state:
+%ifdef BOCHS
+    ; dump state in raw form, to be formatted later by dump_state.c
+
+    push ax
+    push cx
+    push si
+    push bp
+
+    ; save ax and bp for dumping later
+    push ax
+    push bp
+
+    ; reconstruct original sp in bp
+    mov bp, sp
+    add bp, 14                          ; 6 pushed registers + IP
+
+    ; record type is 0x0001
+    mov al, 0x01
+    call out_char
+    mov al, 0x00
+    call out_char
+
+    ; ip is on stack from the function call
+    mov ax, word [bp - 2]
+    call out_char
+    mov al, ah
+    call out_char
+
+    ; flags
+    pushf
+    pop ax
+    call out_char
+    mov al, ah
+    call out_char
+
+    ; segment registers
+    mov ax, cs
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, ds
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, ss
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, es
+    call out_char
+    mov al, ah
+    call out_char
+
+    ; sp and bp
+    mov ax, bp                          ; bp actually contains original sp
+    call out_char
+    mov al, ah
+    call out_char
+
+    pop ax                              ; the real bp that we saved
+    call out_char
+    mov al, ah
+    call out_char
+
+    ; other registers
+    pop ax                              ; the real ax that we saved
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, bx
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, cx
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, dx
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, si
+    call out_char
+    mov al, ah
+    call out_char
+
+    mov ax, di
+    call out_char
+    mov al, ah
+    call out_char
+
+    ; top 16 bytes of the stack
+    mov cx, 16
+    mov si, 0
+
+.loop_stack:
+    mov al, byte [bp + si]
+    call out_char
+
+    inc si
+    loop .loop_stack
+
+    pop bp
+    pop si
+    pop cx
+    pop ax
+%endif
+
+%ifdef VM8086
+    ; ask the vm to dump state
+    out 0x42, al
+%endif
+
+    retn
