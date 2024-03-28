@@ -3,11 +3,11 @@
 section rom
     call initialize
 
-    call dump_state
+    dump_state
 
     mov al, 'H'
     ;call out_char
 
-    call dump_state
+    dump_state
 
     call power_off

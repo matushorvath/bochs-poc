@@ -84,8 +84,8 @@ void record0000(FILE *fin, FILE *fout) {
     fprintf(fout, " ds: %04x", read16(fin, false));
     fprintf(fout, " ss: %04x", read16(fin, false));
     fprintf(fout, " es: %04x", read16(fin, false));
-    fprintf(fout, " sp: %04x", read16(fin, false));
     fprintf(fout, " bp: %04x", read16(fin, false));
+    fprintf(fout, " sp: %04x", read16(fin, false));
     fprintf(fout, "\n");
 
     fprintf(fout, "ax: %04x", read16(fin, false));

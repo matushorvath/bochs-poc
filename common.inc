@@ -41,7 +41,7 @@ boot_addr   equ 0xffff0
 
 section boot start=boot_addr
     ; the CPU starts here at ffff:0000
-    jmp init
+    jmp rom_seg:init
 
     ; to have a round file size, fill the image up to 0x100000
     db  (0x100000 - boot_addr) - ($ - $$) dup 0
@@ -129,8 +129,13 @@ power_off:
     jmp $
 
 
-dump_state:
 %ifdef BOCHS
+
+%macro dump_state 0
+    call dump_state_bochs
+%endmacro
+
+dump_state_bochs:
     ; dump state in raw form, to be formatted later by dump_state.c
 
     push ax
@@ -154,6 +159,8 @@ dump_state:
 
     ; ip is on stack from the function call
     mov ax, word [bp - 2]
+    ; we need to decrease to match the value in vm8086, because 'out 0x42, al' is just 2 bytes
+    dec ax
     call out_char
     mov al, ah
     call out_char
@@ -186,13 +193,13 @@ dump_state:
     mov al, ah
     call out_char
 
-    ; sp and bp
-    mov ax, bp                          ; bp actually contains original sp
+    ; bp and sp
+    pop ax                              ; the real bp that we saved
     call out_char
     mov al, ah
     call out_char
 
-    pop ax                              ; the real bp that we saved
+    mov ax, bp                          ; bp actually contains original sp
     call out_char
     mov al, ah
     call out_char
@@ -246,8 +253,12 @@ dump_state:
 %endif
 
 %ifdef VM8086
-    ; ask the vm to dump state
-    out 0x42, al
+
+%macro dump_state 0
+    out 0x42, al                    ; ask the vm to dump state
+    nop                             ; to match the length of the near call that bochs uses
+%endmacro
+
 %endif
 
     retn
