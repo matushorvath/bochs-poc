@@ -19,7 +19,8 @@ section rom start=(rom_seg * 0x10)                          ; ROM
     db  rom_size / 0x200
 
 boot:                                                       ; entry point
-    xchg bx, bx
+    ; bochs breakpoint
+    ;xchg bx, bx
 
     ; vga text mode
     mov ax, video_seg
@@ -68,8 +69,8 @@ wait_serial:
     int 0x15
 
     ; reset using keyboard controller
-;    mov al, 0xfe                                            ; shutdown command
-;    out 0x64, al                                            ; write to 8042 status port
+    ;mov al, 0xfe                                            ; shutdown command
+    ;out 0x64, al                                            ; write to 8042 status port
 
     jmp $
 

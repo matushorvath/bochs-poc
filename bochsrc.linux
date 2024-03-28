@@ -1,0 +1,6 @@
+#include bochsrc.common
+
+display_library: term
+#display_library: sdl2
+
+sound: driver=dummy
