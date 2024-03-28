@@ -26,7 +26,9 @@ section rom start=rom_addr
     ; option rom signature, needed for booting in bochs
     dw  0xaa55                                              ; signature
     db  code_size / 0x200                                   ; size in 512 byte blocks
+
 init:
+    call initialize
 
 
 %ifdef BOCHS
@@ -54,18 +56,51 @@ section util start=util_addr
 
 initialize:
 %ifdef BOCHS
-    push ax
-    push dx
-
     ; initialize COM1
     mov ah, 0x00                                            ; init serial port
     mov dx, 0                                               ; COM1
     mov al, 0b_111_00_0_11                                  ; 9600 P0 S1 B8
     int 0x14
 
-    pop dx
-    pop ax
+    ; clear segment registers
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
+
+    ; clear top 16 bytes below 0000:ffff, which will be the new stack
+    mov cx, 16
+    mov si, 0xfff0
+
+    mov word [ds:0xfff0], 0
+    mov word [ds:0xfff2], 0
+    mov word [ds:0xfff4], 0
+    mov word [ds:0xfff6], 0
+    mov word [ds:0xfff8], 0
+    mov word [ds:0xfffa], 0
+    mov word [ds:0xfffc], 0
+    mov word [ds:0xfffe], 0
+
+    ; clear rest of the machine state
+    xor bx, bx
+    xor cx, cx
+    xor dx, dx
+    xor si, si
+    xor di, di
 %endif
+
+    ; move stack to 0800:0000, taking care of the return address
+    pop bp                                                  ; pop return address from old stack
+
+    mov sp, 0x0800
+    mov ss, sp
+    xor sp, sp
+
+    push bp                                                 ; push return address to new stack
+    xor bp, bp
+
+    ; clear flags
+    push ax
+    popf
 
     retn
 

@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     FILE *fin = fopen(argv[1], "rb");
     if (!fin) error("Error while opening input file");
 
-    printf("Output    : %s\n", argv[1]);
+    printf("Output    : %s\n", argv[2]);
 
     FILE *fout = fopen(argv[2], "wt");
     if (!fout) error("Error while opening output file");

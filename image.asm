@@ -1,8 +1,6 @@
 %include "common.inc"
 
 section rom
-    call initialize
-
     dump_state
 
     mov al, 'H'
