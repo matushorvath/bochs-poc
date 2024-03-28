@@ -1,33 +1,6 @@
-cpu 8086
+%include "common.inc"
 
-video_seg   equ 0xb800
-rom_seg     equ 0xd000
-
-rom_size    equ 0x4000
-
-org (rom_seg * 0x10)
-
-section video start=(video_seg * 0x10) nobits               ; video memory
-     db  16 dup (?)
-
-
-section rom start=(rom_seg * 0x10)                          ; ROM
-
-    ; signature
-    dw  0xaa55
-    ; size in 512 byte blocks
-    db  rom_size / 0x200
-
-boot:                                                       ; entry point
-    ; bochs breakpoint
-    ;xchg bx, bx
-
-    ; vga text mode
-    mov ax, video_seg
-    mov es, ax
-
-    mov byte [es:0], 'H'
-    mov byte [es:1], 0x07
+section rom
 
     ; serial port
     mov dx, 0                                               ; COM1
@@ -47,9 +20,6 @@ wait_serial:
     and ah, 0b_01000000                                     ; trans shift reg empty
     jz wait_serial
 
-    ; bochs console
-    mov al, 'H'
-    out 0xe9, al
 
     ; apm connect
     mov ax, 0x5301
@@ -71,11 +41,3 @@ wait_serial:
     ; reset using keyboard controller
     ;mov al, 0xfe                                            ; shutdown command
     ;out 0x64, al                                            ; write to 8042 status port
-
-    jmp $
-
-    ; fill in the rest of image up to rom_size - 1
-    db  rom_size-($-$$)-1 dup 0
-
-    ; checksum
-    db  0
