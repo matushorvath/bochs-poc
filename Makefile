@@ -40,6 +40,7 @@ $(BINDIR)/%.bochs.out: $(BINDIR)/%.bochs.bin
 
 .PHONY: prep
 prep:
+	rm $(BINDIR)/*.out
 	mkdir -p $(BINDIR) $(OBJDIR)
 
 .PHONY: clean
