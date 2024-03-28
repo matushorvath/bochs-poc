@@ -31,7 +31,8 @@ $(OBJDIR)/checksum.o: checksum.c
 run: prep $(BINDIR)/image.val
 
 $(BINDIR)/%.val: $(BINDIR)/%.bin
-	echo continue | bochs -q -f bochsrc.${PLATFORM} "optromimage1:file=bin/image.bin,address=0xd0000" "com1:dev=bin/image.log"
+	echo continue | bochs -q -f bochsrc.${PLATFORM} \
+		"optromimage1:file=$<,address=0xd0000" "com1:dev=$@" || true
 
 .PHONY: prep
 prep:
